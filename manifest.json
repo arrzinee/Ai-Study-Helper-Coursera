@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "AI Study Helper for Coursera",
+  "version": "1.0.0",
+  "description": "Understand course content better — explain, hint, summarize, and chat while learning on Coursera.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://*.coursera.org/*",
+    "https://generativelanguage.googleapis.com/*",
+    "https://api.openai.com/*",
+    "https://api.groq.com/*",
+    "https://api.x.ai/*"
+  ],
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.coursera.org/*"],
+      "js": ["src/content.js"],
+      "css": ["src/panel.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "AI Study Helper"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

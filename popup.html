@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Study Helper</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 320px;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 14px;
+      color: #1a1d2e;
+      background: #fff;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1a6bff 0%, #0051d4 100%);
+      color: white;
+      padding: 20px 18px 16px;
+    }
+
+    .header h1 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .header p {
+      font-size: 12px;
+      opacity: 0.85;
+      line-height: 1.4;
+    }
+
+    .body {
+      padding: 18px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #6b7280;
+      margin-bottom: 6px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    select {
+      width: 100%;
+      border: 1px solid #e2e6f0;
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 13px;
+      outline: none;
+      background: #f7f8fc;
+      color: #1a1d2e;
+      cursor: pointer;
+      transition: border-color 0.15s;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+      margin-bottom: 14px;
+    }
+
+    select:focus {
+      border-color: #1a6bff;
+    }
+
+    input[type="password"] {
+      flex: 1;
+      border: 1px solid #e2e6f0;
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 13px;
+      outline: none;
+      background: #f7f8fc;
+      color: #1a1d2e;
+      transition: border-color 0.15s;
+    }
+
+    input[type="password"]:focus {
+      border-color: #1a6bff;
+    }
+
+    button.save {
+      padding: 9px 14px;
+      background: #1a6bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+
+    button.save:hover {
+      background: #0051d4;
+    }
+
+    .status {
+      margin-top: 10px;
+      font-size: 12px;
+      min-height: 18px;
+      color: #6b7280;
+    }
+
+    .status.success {
+      color: #16a34a;
+    }
+
+    .status.error {
+      color: #dc2626;
+    }
+
+    .divider {
+      height: 1px;
+      background: #e2e6f0;
+      margin: 16px 0;
+    }
+
+    .features {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .feature-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .feature-text strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 1px;
+    }
+
+    .feature-text span {
+      font-size: 12px;
+      color: #6b7280;
+      line-height: 1.4;
+    }
+
+    .footer {
+      padding: 12px 18px;
+      border-top: 1px solid #e2e6f0;
+      font-size: 11px;
+      color: #9ca3af;
+      text-align: center;
+    }
+
+    .footer a {
+      color: #1a6bff;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .provider-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.2);
+      margin-top: 6px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <h1>🎓 AI Study Helper</h1>
+    <p>Your Coursera learning companion — powered by AI</p>
+    <div class="provider-badge" id="providerBadge">✦ Gemini</div>
+  </div>
+
+  <div class="body">
+    <label for="providerSelect">AI Provider</label>
+    <select id="providerSelect">
+      <option value="gemini">Google Gemini (Free)</option>
+      <option value="openai">OpenAI (GPT-4o)</option>
+      <option value="groq">Groq (Llama — Fast)</option>
+      <option value="grok">xAI Grok</option>
+    </select>
+
+    <label for="apiKeyInput" id="apiKeyLabel">API Key</label>
+    <div class="input-row">
+      <input type="password" id="apiKeyInput" placeholder="AIza..." autocomplete="off" />
+      <button class="save" id="saveBtn">Save</button>
+    </div>
+    <div class="status" id="status"></div>
+
+    <div class="divider"></div>
+
+    <div class="features">
+      <div class="feature">
+        <span class="feature-icon">💡</span>
+        <div class="feature-text">
+          <strong>Explain</strong>
+          <span>Select any text on Coursera to get a simple explanation.</span>
+        </div>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">🔍</span>
+        <div class="feature-text">
+          <strong>Hint Mode</strong>
+          <span>Get guided hints — never direct answers — for assignments.</span>
+        </div>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">📋</span>
+        <div class="feature-text">
+          <strong>Summarize</strong>
+          <span>Turn any lecture transcript into quick study notes.</span>
+        </div>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">💬</span>
+        <div class="feature-text">
+          <strong>Chat Assistant</strong>
+          <span>Ask doubts in context — the assistant knows your course.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer" id="footerHelp">
+    Get your free API key at <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+
+</html>
