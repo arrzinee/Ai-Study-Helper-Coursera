@@ -1,23 +1,14 @@
-// ─── AI Study Helper — Content Script ───────────────────────────────────────
-// Injected into every Coursera page. Handles:
-//   1. Text selection popover (Explain / Hint)
-//   2. Lecture transcript summarizer
-//   3. Floating chat panel
 
 (function () {
   if (window.__aiStudyHelperLoaded) return;
   window.__aiStudyHelperLoaded = true;
 
-  // ── Utilities ──────────────────────────────────────────────────────────────
-
   function getCourseName() {
-    // Try page title first, strip " | Coursera" suffix
     const title = document.title.replace(/\s*\|\s*Coursera\s*$/, "").trim();
     return title || "this course";
   }
 
   function getLectureTranscript() {
-    // Coursera renders transcript in various containers; try common selectors
     const selectors = [
       "[data-testid='transcript-item']",
       ".transcript-item",
@@ -62,7 +53,6 @@
       .replace(/\n/g, "<br>");
   }
 
-  // ── 1. SELECTION POPOVER ───────────────────────────────────────────────────
 
   let popover = null;
 
@@ -104,12 +94,10 @@
   function showPopover(x, y, selectedText) {
     if (!popover) popover = createPopover();
 
-    // Reset state
     popover.dataset.selectedText = selectedText;
     popover.querySelector(".ash-popover-buttons").hidden = false;
     popover.querySelector(".ash-popover-result").hidden = true;
 
-    // Position near selection
     popover.style.left = `${Math.min(x, window.innerWidth - 220)}px`;
     popover.style.top = `${y + 8}px`;
     popover.classList.add("ash-visible");
@@ -143,7 +131,6 @@
     }
   }
 
-  // Selection event listener
   document.addEventListener("mouseup", (e) => {
     const selection = window.getSelection();
     const text = selection?.toString().trim();
@@ -161,7 +148,6 @@
     }
   });
 
-  // ── 2. CHAT PANEL ──────────────────────────────────────────────────────────
 
   let chatHistory = [];
   let isHintMode = false;
@@ -216,17 +202,14 @@
 
     document.body.appendChild(panel);
 
-    // Set course name
     panel.querySelector("#ash-course-name").textContent = getCourseName();
 
-    // Toggle panel open/closed
     panel.querySelector(".ash-toggle-btn").addEventListener("click", () => {
       panelOpen = !panelOpen;
       panel.classList.toggle("ash-panel-collapsed", !panelOpen);
       panel.querySelector(".ash-toggle-btn").textContent = panelOpen ? "−" : "+";
     });
 
-    // Hint mode toggle
     panel.querySelector("#ash-hint-toggle").addEventListener("change", (e) => {
       isHintMode = e.target.checked;
       addSystemMessage(
@@ -236,12 +219,10 @@
       );
     });
 
-    // Summarize lecture
     panel.querySelector(".ash-summarize-btn").addEventListener("click", () =>
       handleSummarize()
     );
 
-    // Send message
     const input = panel.querySelector("#ash-input");
     const sendBtn = panel.querySelector("#ash-send");
 
@@ -253,7 +234,6 @@
       }
     });
 
-    // Auto-resize textarea
     input.addEventListener("input", () => {
       input.style.height = "auto";
       input.style.height = `${Math.min(input.scrollHeight, 120)}px`;
@@ -300,15 +280,14 @@
     addMessage("user", text);
     chatHistory.push({ role: "user", content: text });
 
-    // If hint mode is on, inject a reminder into the last user message
     const messagesPayload = isHintMode
       ? [
-          ...chatHistory.slice(0, -1),
-          {
-            role: "user",
-            content: `[HINT MODE: guide my thinking, never give direct answers]\n\n${text}`,
-          },
-        ]
+        ...chatHistory.slice(0, -1),
+        {
+          role: "user",
+          content: `[HINT MODE: guide my thinking, never give direct answers]\n\n${text}`,
+        },
+      ]
       : chatHistory;
 
     const loadingEl = addMessage(
@@ -348,7 +327,6 @@
       return;
     }
 
-    // Chunk transcript to ~6000 chars to stay within token limits
     const chunk = transcript.slice(0, 6000);
 
     const loadingEl = addMessage(
@@ -367,7 +345,6 @@
     document.getElementById("ash-messages").scrollTop = 99999;
   }
 
-  // ── 3. FAB (Floating Action Button) ────────────────────────────────────────
 
   function createFAB() {
     const fab = document.createElement("button");
@@ -388,7 +365,6 @@
     });
   }
 
-  // ── Init ───────────────────────────────────────────────────────────────────
 
   createChatPanel();
   createFAB();

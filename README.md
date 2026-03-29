@@ -2,7 +2,7 @@
 
 A Chrome extension that helps you **understand course content better** — not bypass it.
 
-Powered by [Claude](https://anthropic.com) (claude-sonnet-4).
+Works with **any AI API of your choice** — Groq, OpenAI, Gemini, Grok, or Anthropic.
 
 ---
 
@@ -17,22 +17,147 @@ Powered by [Claude](https://anthropic.com) (claude-sonnet-4).
 
 ---
 
-## Setup
+## Step 1 — Choose Your AI API
 
-### 1. Get an Anthropic API Key
+Pick any provider below. **Groq is recommended** — completely free, no credit card, works worldwide.
+
+---
+
+### ✅ Groq — FREE (Recommended)
+> Best option. Free forever, fast, works in all countries including India.
+
+| | |
+|---|---|
+| **Free limit** | ~14,400 requests/day |
+| **Credit card** | ❌ Not required |
+| **Works in India** | ✅ Yes |
+| **Key format** | `gsk_...` |
+
+**How to get your key:**
+1. Go to [console.groq.com](https://console.groq.com)
+2. Sign up with Google or email
+3. Click **API Keys** in the left sidebar
+4. Click **Create API Key** → copy it
+
+---
+
+### ✅ DeepSeek — FREE $5 Credit
+> Very smart model (beats GPT-4 on benchmarks). $5 free credit on signup — lasts thousands of requests.
+
+| | |
+|---|---|
+| **Free limit** | $5 one-time credit |
+| **Credit card** | ❌ Not required for signup |
+| **Works in India** | ✅ Yes |
+| **Key format** | `sk-...` |
+
+**How to get your key:**
+1. Go to [platform.deepseek.com](https://platform.deepseek.com)
+2. Sign up → go to **API Keys**
+3. Click **Create API Key** → copy it
+
+---
+
+### ✅ OpenRouter — FREE (Some Models)
+> Access many AI models in one place. Some models are completely free.
+
+| | |
+|---|---|
+| **Free limit** | Varies by model |
+| **Credit card** | ❌ Not required for free models |
+| **Works in India** | ✅ Yes |
+| **Key format** | `sk-or-...` |
+
+**How to get your key:**
+1. Go to [openrouter.ai](https://openrouter.ai)
+2. Sign up → click **Keys**
+3. Click **Create Key** → copy it
+
+---
+
+### ⚠️ Google Gemini — FREE (Blocked in India)
+> Free tier exists but does not work in India. Works fine in other countries.
+
+| | |
+|---|---|
+| **Free limit** | 1,500 req/day (outside India) |
+| **Credit card** | ❌ Not required |
+| **Works in India** | ❌ No — free quota is set to 0 |
+| **Key format** | `AIza...` |
+
+**How to get your key:**
+1. Go to [aistudio.google.com](https://aistudio.google.com)
+2. Sign in with Google → click **Get API Key**
+3. Click **Create API Key** → copy it
+
+---
+
+### ⚠️ OpenAI — PAID (Trial Credit Only)
+> No ongoing free tier. New accounts get a small one-time trial credit.
+
+| | |
+|---|---|
+| **Free limit** | Small trial credit only |
+| **Credit card** | ✅ Required after trial |
+| **Works in India** | ✅ Yes |
+| **Key format** | `sk-...` |
+
+**How to get your key:**
+1. Go to [platform.openai.com](https://platform.openai.com)
+2. Sign up → go to **API Keys**
+3. Click **Create new secret key** → copy it
+
+---
+
+### ⚠️ Grok (xAI) — LIMITED Free Tier
+> Elon Musk's AI. Limited free access, mainly through X (Twitter) Premium.
+
+| | |
+|---|---|
+| **Free limit** | Very limited |
+| **Credit card** | Depends on plan |
+| **Works in India** | ✅ Yes |
+| **Key format** | `xai-...` |
+
+**How to get your key:**
+1. Go to [console.x.ai](https://console.x.ai)
+2. Sign in with your X account
+3. Go to **API Keys** → create one
+
+---
+
+### ⚠️ Anthropic (Claude) — PAID Only
+> No free tier. Pay as you go.
+
+| | |
+|---|---|
+| **Free limit** | ❌ None |
+| **Credit card** | ✅ Required |
+| **Works in India** | ✅ Yes |
+| **Key format** | `sk-ant-...` |
+
+**How to get your key:**
 1. Go to [console.anthropic.com](https://console.anthropic.com)
-2. Create an account and generate an API key (`sk-ant-...`)
+2. Sign up → go to **API Keys**
+3. Click **Create Key** → copy it
 
-### 2. Load the Extension in Chrome
-1. Open Chrome → go to `chrome://extensions`
-2. Enable **Developer Mode** (top right toggle)
-3. Click **Load unpacked**
-4. Select the `ai-study-helper` folder
+---
 
-### 3. Add Your API Key
-1. Click the extension icon in the toolbar
-2. Paste your Anthropic API key → click **Save**
-3. Navigate to any Coursera course and refresh the page
+## Step 2 — Install the Extension
+
+1. Download or clone this repository
+2. Open Chrome → go to `chrome://extensions`
+3. Enable **Developer Mode** (toggle in top right)
+4. Click **Load unpacked**
+5. Select the `ai-study-helper` folder (the one containing `manifest.json`)
+
+---
+
+## Step 3 — Add Your API Key
+
+1. Click the 🎓 extension icon in the Chrome toolbar
+2. Paste your API key → click **Save**
+3. Go to any Coursera course and refresh the page
 
 ---
 
@@ -44,7 +169,7 @@ ai-study-helper/
 ├── popup.html             ← Settings popup (API key entry)
 ├── popup.js               ← Popup logic
 ├── src/
-│   ├── background.js      ← Service worker — all Claude API calls
+│   ├── background.js      ← Service worker — all API calls
 │   ├── content.js         ← Injected into Coursera pages
 │   └── panel.css          ← Styles for injected UI
 └── icons/
@@ -62,44 +187,46 @@ User selects text / clicks button
         ↓
 content.js captures the event
         ↓
-Sends message to background.js (chrome.runtime.sendMessage)
+Sends message to background.js
         ↓
-background.js calls Claude API (api.anthropic.com)
+background.js calls your chosen AI API
         ↓
-Response streamed back to content.js
+Response returned to content.js
         ↓
 UI updated with the result
 ```
 
-All API calls go through `background.js` to avoid CORS restrictions.  
-Your API key is stored locally in `chrome.storage.local` — never sent anywhere except directly to Anthropic.
-
----
-
-## Icons
-
-You need to add icon files at:
-- `icons/icon16.png` (16×16)
-- `icons/icon48.png` (48×48)
-- `icons/icon128.png` (128×128)
-
-You can use any 🎓 emoji rendered to PNG, or design your own.
+Your API key is stored locally in `chrome.storage.local` — never sent anywhere except directly to your chosen AI provider.
 
 ---
 
 ## Ethical Design Principles
 
 - ✅ The extension **never auto-fills** assignment answers
-- ✅ **Hint Mode** is available to enforce Socratic guidance only
-- ✅ All AI responses are clearly **labelled as AI-generated**
+- ✅ **Hint Mode** enforces Socratic guidance — no direct answers
+- ✅ All AI responses are clearly labelled as AI-generated
 - ✅ Your API key stays **local** — stored only in your browser
+- ✅ Open source — inspect every line of code
 
 ---
 
 ## Roadmap Ideas
 
+- [ ] Dropdown in popup to select API provider
 - [ ] Streamed responses for faster feel
-- [ ] Support for multiple languages (auto-detect from course)
+- [ ] Support for multiple languages
 - [ ] Flashcard generator from lecture notes
 - [ ] Save summaries to a local notebook
 - [ ] Dark mode support
+
+---
+
+## Contributing
+
+Pull requests are welcome! If you find a bug or want to add a feature, feel free to open an issue or submit a PR.
+
+---
+
+## License
+
+MIT — free to use, modify, and distribute. Just give credit. See [LICENSE](LICENSE) for details.

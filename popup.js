@@ -1,5 +1,3 @@
-// ─── AI Study Helper — Popup Script ─────────────────────────────────────────
-
 const input = document.getElementById("apiKeyInput");
 const saveBtn = document.getElementById("saveBtn");
 const status = document.getElementById("status");
@@ -8,7 +6,6 @@ const providerBadge = document.getElementById("providerBadge");
 const apiKeyLabel = document.getElementById("apiKeyLabel");
 const footerHelp = document.getElementById("footerHelp");
 
-// Provider-specific config for the popup UI
 const PROVIDER_INFO = {
   gemini: {
     label: "Gemini AI Studio API Key",
@@ -40,7 +37,6 @@ const PROVIDER_INFO = {
   },
 };
 
-// Update UI based on selected provider
 function updateProviderUI(provider) {
   const info = PROVIDER_INFO[provider];
   apiKeyLabel.textContent = info.label;
@@ -49,7 +45,6 @@ function updateProviderUI(provider) {
   footerHelp.innerHTML = info.footer;
 }
 
-// Load saved settings on open
 chrome.storage.local.get(["apiKey", "aiProvider"], ({ apiKey, aiProvider }) => {
   const provider = aiProvider || "gemini";
   providerSelect.value = provider;
@@ -61,7 +56,6 @@ chrome.storage.local.get(["apiKey", "aiProvider"], ({ apiKey, aiProvider }) => {
   }
 });
 
-// When provider changes, update UI and clear key
 providerSelect.addEventListener("change", () => {
   const provider = providerSelect.value;
   updateProviderUI(provider);

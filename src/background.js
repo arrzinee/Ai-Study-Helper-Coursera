@@ -1,8 +1,3 @@
-// ─── AI Study Helper — Background Service Worker ───────────────────────────
-// All AI API calls go through here to avoid CORS issues in content scripts.
-// Supports Gemini, OpenAI, and Grok (xAI).
-
-// ── Provider Configurations ─────────────────────────────────────────────────
 
 const PROVIDERS = {
   gemini: {
@@ -89,7 +84,6 @@ const PROVIDERS = {
   },
 };
 
-// ── Prompt Templates ────────────────────────────────────────────────────────
 
 const SYSTEM_PROMPTS = {
   explain: `You are a friendly, patient tutor helping a student understand course content on Coursera.
@@ -125,14 +119,13 @@ Your goal is to HELP THEM LEARN — not to do their work for them.
 - If you don't know something specific to the course, say so honestly.`,
 };
 
-// ── Message Handler ──────────────────────────────────────────────────────────
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === "GEMINI_REQUEST") {
     handleAIRequest(request).then(sendResponse).catch((err) => {
       sendResponse({ error: err.message });
     });
-    return true; // Keep channel open for async response
+    return true;
   }
 });
 
@@ -183,7 +176,6 @@ async function handleAIRequest({ action, payload }) {
       throw new Error("Unknown action");
   }
 
-  // ── Make the API call using the selected provider ─────────────────────────
   const url = provider.buildUrl(apiKey);
   const headers = provider.buildHeaders(apiKey);
   const body = provider.buildBody(systemPrompt, messages);
